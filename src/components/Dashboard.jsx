@@ -3,21 +3,18 @@ import LegacyBarChart from "./charts/LegacyBarChart";
 import LegacyPieChart from "./charts/LegacyPieChart";
 import { formatDate, buildCommunity } from "../utils/computeLegacy";
 
-export default function Dashboard({ currentUser, animMother, animFather }) {
+export default function Dashboard({ legacy, animMother, animFather }) {
   const community = buildCommunity();
-  const displayFactors = currentUser.factors.map((f) => ({
-    ...f,
-    total: f.mother + f.father,
-  }));
+  const { user, summary, factors, charts } = legacy;
 
   return (
     <div className="animate-ll-fade-up">
       <div className="max-w-[1280px] mx-auto px-10 pt-8 pb-2">
         <h2 className="text-[26px] font-extrabold tracking-[-0.02em] mb-1 text-slate-900">
-          Welcome back, {currentUser.name}
+          Welcome back, {user.name}
         </h2>
         <p className="text-[14.5px] text-slate-500 mb-7">
-          Here's your parental legacy distribution based on {formatDate(currentUser.dob)}.
+          Here's your parental legacy distribution based on {formatDate(user.dob)}.
         </p>
       </div>
 
@@ -63,7 +60,7 @@ export default function Dashboard({ currentUser, animMother, animFather }) {
                   <CheckCircle size={17} color="#0F172A" />
                 </div>
               </div>
-              <div className="text-[30px] font-extrabold text-slate-900">100</div>
+              <div className="text-[30px] font-extrabold text-slate-900">{summary.grandTotal}</div>
               <div className="text-[13px] text-slate-500 mt-0.5">Overall Total</div>
             </div>
 
@@ -73,7 +70,7 @@ export default function Dashboard({ currentUser, animMother, animFather }) {
                   <TrendingUp size={17} color="#F59E0B" />
                 </div>
               </div>
-              <div className="text-[30px] font-extrabold text-slate-900">{currentUser.higher}</div>
+              <div className="text-[30px] font-extrabold text-slate-900">{summary.higherLegacy}</div>
               <div className="text-[13px] text-slate-500 mt-0.5">Higher Legacy</div>
             </div>
           </div>
@@ -95,9 +92,9 @@ export default function Dashboard({ currentUser, animMother, animFather }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {displayFactors.map((f, i) => (
-                    <tr key={f.factor} style={{ background: i % 2 === 0 ? "#FFFFFF" : "#F8FAFC" }}>
-                      <td className="text-left text-[13.5px] font-medium text-slate-900 px-3 py-3">{f.factor}</td>
+                  {factors.map((f, i) => (
+                    <tr key={f.name} style={{ background: i % 2 === 0 ? "#FFFFFF" : "#F8FAFC" }}>
+                      <td className="text-left text-[13.5px] font-medium text-slate-900 px-3 py-3">{f.name}</td>
                       <td className="text-right text-[13.5px] font-semibold text-blue-600 px-3 py-3">{f.mother}%</td>
                       <td className="text-right text-[13.5px] font-semibold text-emerald-500 px-3 py-3">{f.father}%</td>
                       <td className="text-right text-[13.5px] font-semibold text-slate-500 px-3 py-3">{f.total}%</td>
@@ -115,14 +112,14 @@ export default function Dashboard({ currentUser, animMother, animFather }) {
               <p className="text-[13px] text-slate-500 mb-1.5">
                 Side-by-side comparison across every life factor.
               </p>
-              <LegacyBarChart data={currentUser.factors} height={300} />
+              <LegacyBarChart data={charts.barChart} height={300} />
             </div>
             <div className="bg-white border border-slate-200 rounded-2xl p-6">
               <h3 className="text-base font-bold mb-0.5 text-slate-900">Overall Legacy Split</h3>
               <p className="text-[13px] text-slate-500 mb-1.5">
                 Aggregate mother vs father share across all factors.
               </p>
-              <LegacyPieChart mother={currentUser.overallMother} father={currentUser.overallFather} height={300} />
+              <LegacyPieChart data={charts.pieChart} height={300} />
             </div>
           </div>
 
@@ -140,12 +137,12 @@ export default function Dashboard({ currentUser, animMother, animFather }) {
         <div className="flex flex-col gap-5 sticky top-[84px]">
           <div className="bg-white border border-slate-200 rounded-2xl p-6 text-center">
             <div className="w-16 h-16 rounded-full bg-blue-600 text-white text-[22px] font-bold flex items-center justify-center mx-auto mb-3.5">
-              {currentUser.name.trim().charAt(0).toUpperCase()}
+              {user.name.trim().charAt(0).toUpperCase()}
             </div>
-            <div className="text-[15.5px] font-bold text-slate-900">{currentUser.name}</div>
+            <div className="text-[15.5px] font-bold text-slate-900">{user.name}</div>
             <div className="flex items-center justify-center gap-1.5 text-[12.5px] text-slate-500 mt-2">
               <Calendar size={13} color="#64748B" />
-              {formatDate(currentUser.dob)}
+              {formatDate(user.dob)}
             </div>
             <div className="text-xs text-slate-400 mt-1">Member since July 2026</div>
           </div>
@@ -153,11 +150,11 @@ export default function Dashboard({ currentUser, animMother, animFather }) {
             <div className="text-[13px] font-bold text-slate-900 mb-3.5">Quick Stats</div>
             <div className="flex justify-between items-center py-2.5 border-b border-slate-100">
               <span className="text-[13px] text-slate-500">Factors analyzed</span>
-              <span className="text-[13px] font-semibold text-slate-900">7</span>
+              <span className="text-[13px] font-semibold text-slate-900">{factors.length}</span>
             </div>
             <div className="flex justify-between items-center py-2.5 border-b border-slate-100">
-              <span className="text-[13px] text-slate-500">Data points</span>
-              <span className="text-[13px] font-semibold text-slate-900">14</span>
+              <span className="text-[13px] text-slate-500">Birth weight</span>
+              <span className="text-[13px] font-semibold text-slate-900">{summary.birthWeight}</span>
             </div>
             <div className="flex justify-between items-center py-2.5">
               <span className="text-[13px] text-slate-500">Account status</span>

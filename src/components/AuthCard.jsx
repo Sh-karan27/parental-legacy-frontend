@@ -1,15 +1,29 @@
 import { useState } from "react";
 
-export default function AuthCard({ authMode, onSwitchMode, onSubmit, loading }) {
+export default function AuthCard({ authMode, onSwitchMode, onSubmit, loading, apiError }) {
   const isRegister = authMode === "register";
 
-  const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "", dob: "" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirm: "",
+    dob: "",
+    gender: "",
+    familyType: "parents",
+    parentOneName: "",
+    parentTwoName: "",
+  });
   const [errors, setErrors] = useState({});
 
   const setField = (key, value) => {
     setForm((f) => ({ ...f, [key]: value }));
     setErrors((e) => ({ ...e, [key]: null }));
   };
+
+  const isGuardians = form.familyType === "guardians";
+  const parentOneLabel = isGuardians ? "Guardian 1 Name" : "Mother's Name";
+  const parentTwoLabel = isGuardians ? "Guardian 2 Name" : "Father's Name";
 
   const validate = () => {
     const errs = {};
@@ -18,6 +32,9 @@ export default function AuthCard({ authMode, onSwitchMode, onSubmit, loading }) 
     if (!form.password || form.password.length < 6) errs.password = "Minimum 6 characters";
     if (isRegister && form.password !== form.confirm) errs.confirm = "Passwords do not match";
     if (isRegister && !form.dob) errs.dob = "Date of birth is required";
+    if (isRegister && !form.gender) errs.gender = "Select a gender";
+    if (isRegister && !form.parentOneName.trim()) errs.parentOneName = `${parentOneLabel} is required`;
+    if (isRegister && !form.parentTwoName.trim()) errs.parentTwoName = `${parentTwoLabel} is required`;
     return errs;
   };
 
@@ -28,7 +45,11 @@ export default function AuthCard({ authMode, onSwitchMode, onSubmit, loading }) 
       setErrors(errs);
       return;
     }
-    onSubmit({ ...form, isRegister });
+    onSubmit({
+      ...form,
+      username: form.name.trim().toLowerCase().replace(/\s+/g, ""),
+      isRegister,
+    });
   };
 
   const tabActive =
@@ -38,6 +59,13 @@ export default function AuthCard({ authMode, onSwitchMode, onSubmit, loading }) 
 
   const inputClass =
     "w-full box-border px-3.5 py-[11px] rounded-[10px] border border-slate-200 text-sm text-slate-900 focus:outline-none focus:border-blue-600 focus:ring-[3px] focus:ring-blue-600/10";
+
+  const familyBtn = (active) =>
+    `flex-1 py-2.5 rounded-[10px] border text-[13px] font-semibold cursor-pointer transition-colors ${
+      active
+        ? "bg-blue-600 border-blue-600 text-white"
+        : "bg-white border-slate-200 text-slate-600"
+    }`;
 
   return (
     <div id="auth-card" className="max-w-[460px] mx-auto my-16 px-6">
@@ -50,6 +78,12 @@ export default function AuthCard({ authMode, onSwitchMode, onSubmit, loading }) 
             Register
           </button>
         </div>
+
+        {apiError && (
+          <div className="mb-4 text-[13px] text-red-600 bg-red-50 border border-red-100 rounded-[10px] px-3.5 py-2.5">
+            {apiError}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           {isRegister && (
@@ -103,7 +137,8 @@ export default function AuthCard({ authMode, onSwitchMode, onSubmit, loading }) 
                 />
                 {errors.confirm && <div className="text-xs text-red-500 mt-1">{errors.confirm}</div>}
               </div>
-              <div className="mb-2">
+
+              <div className="mb-4">
                 <label className="block text-[12.5px] font-semibold text-slate-700 mb-1.5">Date of Birth</label>
                 <input
                   type="date"
@@ -112,6 +147,63 @@ export default function AuthCard({ authMode, onSwitchMode, onSubmit, loading }) 
                   className={inputClass}
                 />
                 {errors.dob && <div className="text-xs text-red-500 mt-1">{errors.dob}</div>}
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-[12.5px] font-semibold text-slate-700 mb-1.5">Gender</label>
+                <select
+                  value={form.gender}
+                  onChange={(e) => setField("gender", e.target.value)}
+                  className={inputClass}
+                >
+                  <option value="">Select gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
+                {errors.gender && <div className="text-xs text-red-500 mt-1">{errors.gender}</div>}
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-[12.5px] font-semibold text-slate-700 mb-1.5">Family</label>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setField("familyType", "parents")}
+                    className={familyBtn(form.familyType === "parents")}
+                  >
+                    Parents
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setField("familyType", "guardians")}
+                    className={familyBtn(form.familyType === "guardians")}
+                  >
+                    Guardians
+                  </button>
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-[12.5px] font-semibold text-slate-700 mb-1.5">{parentOneLabel}</label>
+                <input
+                  type="text"
+                  value={form.parentOneName}
+                  onChange={(e) => setField("parentOneName", e.target.value)}
+                  className={inputClass}
+                />
+                {errors.parentOneName && <div className="text-xs text-red-500 mt-1">{errors.parentOneName}</div>}
+              </div>
+
+              <div className="mb-2">
+                <label className="block text-[12.5px] font-semibold text-slate-700 mb-1.5">{parentTwoLabel}</label>
+                <input
+                  type="text"
+                  value={form.parentTwoName}
+                  onChange={(e) => setField("parentTwoName", e.target.value)}
+                  className={inputClass}
+                />
+                {errors.parentTwoName && <div className="text-xs text-red-500 mt-1">{errors.parentTwoName}</div>}
               </div>
             </>
           )}
