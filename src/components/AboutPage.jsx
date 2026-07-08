@@ -6,7 +6,7 @@ const STEPS = [
   { icon: PieChart, bg: "#FFFBEB", color: "#F59E0B", title: "3. Explore your dashboard", body: "See your split, factor table, and charts — and compare against the community." },
 ];
 
-const STACK = ["React", "Tailwind CSS", "Recharts", "Lucide Icons", "Framer Motion", "MongoDB · Express · Node"];
+const STACK = ["React", "Tailwind CSS", "Recharts", "Lucide Icons", "MongoDB · Express · Node"];
 
 export default function AboutPage() {
   return (
