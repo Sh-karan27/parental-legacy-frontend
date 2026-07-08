@@ -1,6 +1,15 @@
 import { useState } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser, loginUser } from "../store/slices/userSlice";
 
-export default function AuthCard({ authMode, onSwitchMode, onSubmit, loading, apiError }) {
+export default function AuthCard() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.auth);
+
+  const authMode = searchParams.get("mode") === "login" ? "login" : "register";
   const isRegister = authMode === "register";
 
   const [form, setForm] = useState({
@@ -38,18 +47,41 @@ export default function AuthCard({ authMode, onSwitchMode, onSubmit, loading, ap
     return errs;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length) {
       setErrors(errs);
       return;
     }
-    onSubmit({
-      ...form,
-      username: form.name.trim().toLowerCase().replace(/\s+/g, ""),
-      isRegister,
-    });
+
+    const username = form.name.trim().toLowerCase().replace(/\s+/g, "");
+
+    if (isRegister) {
+      const registerResult = await dispatch(
+        registerUser({
+          username,
+          email: form.email,
+          password: form.password,
+          dob: form.dob,
+          gender: form.gender,
+          familyType: form.familyType,
+          parentOneName: form.parentOneName,
+          parentTwoName: form.parentTwoName,
+        })
+      );
+      if (registerUser.rejected.match(registerResult)) return;
+    }
+
+    const loginResult = await dispatch(loginUser({ email: form.email, password: form.password }));
+    if (loginUser.rejected.match(loginResult)) return;
+
+    navigate("/dashboard");
+  };
+
+  const switchMode = (mode) => {
+    setSearchParams({ mode });
+    setErrors({});
   };
 
   const tabActive =
@@ -71,19 +103,13 @@ export default function AuthCard({ authMode, onSwitchMode, onSubmit, loading, ap
     <div id="auth-card" className="max-w-[460px] mx-auto my-16 px-6">
       <div className="bg-white border border-slate-200 rounded-[20px] shadow-[0_8px_24px_-8px_rgba(15,23,42,0.08)] p-9">
         <div className="flex bg-slate-100 rounded-xl p-1 mb-[26px]">
-          <button type="button" onClick={() => onSwitchMode("login")} className={isRegister ? tabInactive : tabActive}>
+          <button type="button" onClick={() => switchMode("login")} className={isRegister ? tabInactive : tabActive}>
             Login
           </button>
-          <button type="button" onClick={() => onSwitchMode("register")} className={isRegister ? tabActive : tabInactive}>
+          <button type="button" onClick={() => switchMode("register")} className={isRegister ? tabActive : tabInactive}>
             Register
           </button>
         </div>
-
-        {apiError && (
-          <div className="mb-4 text-[13px] text-red-600 bg-red-50 border border-red-100 rounded-[10px] px-3.5 py-2.5">
-            {apiError}
-          </div>
-        )}
 
         <form onSubmit={handleSubmit}>
           {isRegister && (
@@ -226,14 +252,14 @@ export default function AuthCard({ authMode, onSwitchMode, onSubmit, loading, ap
           {isRegister ? (
             <>
               Already have an account?{" "}
-              <a href="#" onClick={(e) => { e.preventDefault(); onSwitchMode("login"); }}>
+              <a href="#" onClick={(e) => { e.preventDefault(); switchMode("login"); }}>
                 Sign in
               </a>
             </>
           ) : (
             <>
               Don't have an account?{" "}
-              <a href="#" onClick={(e) => { e.preventDefault(); onSwitchMode("register"); }}>
+              <a href="#" onClick={(e) => { e.preventDefault(); switchMode("register"); }}>
                 Register
               </a>
             </>

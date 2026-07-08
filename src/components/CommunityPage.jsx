@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { Sparkles } from "lucide-react";
 import { buildCommunity } from "../utils/computeLegacy";
 
-export default function CommunityPage({ onNavigate }) {
+export default function CommunityPage() {
+  const navigate = useNavigate();
   const community = buildCommunity();
 
   return (
@@ -75,7 +77,7 @@ export default function CommunityPage({ onNavigate }) {
             Register with your date of birth to unlock your personal factor breakdown and charts.
           </p>
           <button
-            onClick={() => onNavigate("auth", "register")}
+            onClick={() => navigate("/auth?mode=register")}
             className="block w-full box-border text-sm font-semibold text-white bg-blue-600 py-2.5 rounded-[10px] hover:bg-blue-700 transition-colors"
           >
             Create account

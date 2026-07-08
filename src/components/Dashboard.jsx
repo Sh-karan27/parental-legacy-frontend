@@ -1,9 +1,70 @@
-import { Percent, Award, CheckCircle, TrendingUp, Calendar } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Percent, Award, CheckCircle, TrendingUp, Calendar, Sparkles } from "lucide-react";
 import LegacyBarChart from "./charts/LegacyBarChart";
 import LegacyPieChart from "./charts/LegacyPieChart";
+import { fetchMyLegacy } from "../store/slices/legacySlice";
 import { formatDate, buildCommunity } from "../utils/computeLegacy";
 
-export default function Dashboard({ legacy, animMother, animFather }) {
+export default function Dashboard() {
+  const dispatch = useDispatch();
+  const authUser = useSelector((state) => state.auth.user);
+  const { data: legacy, loading } = useSelector((state) => state.legacy);
+  const [animMother, setAnimMother] = useState(0);
+  const [animFather, setAnimFather] = useState(0);
+
+  useEffect(() => {
+    if (!legacy) return;
+    const targetM = legacy.summary.motherTotal;
+    const targetF = legacy.summary.fatherTotal;
+    const start = Date.now();
+    const dur = 900;
+
+    const timer = window.setInterval(() => {
+      const p = Math.min(1, (Date.now() - start) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setAnimMother(Math.round(targetM * eased));
+      setAnimFather(Math.round(targetF * eased));
+      if (p >= 1) {
+        window.clearInterval(timer);
+        setAnimMother(Math.round(targetM));
+        setAnimFather(Math.round(targetF));
+      }
+    }, 30);
+
+    return () => window.clearInterval(timer);
+  }, [legacy]);
+
+  const handleGenerate = () => {
+    dispatch(fetchMyLegacy());
+  };
+
+  if (!legacy) {
+    return (
+      <div className="max-w-xl mx-auto px-6 py-24 text-center animate-ll-fade-up">
+        <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center mx-auto mb-5">
+          <Sparkles size={24} color="#2563EB" />
+        </div>
+        <h2 className="text-2xl font-extrabold text-slate-900 mb-2">
+          Welcome, {authUser?.username}
+        </h2>
+        <p className="text-slate-500 mb-8">
+          Generate your personalized parental legacy analysis based on your date of birth.
+        </p>
+        <button
+          onClick={handleGenerate}
+          disabled={loading}
+          className="inline-flex items-center gap-2 text-[15px] font-semibold text-white bg-blue-600 px-6 py-3.5 rounded-[10px] shadow-sm hover:bg-blue-700 transition-colors disabled:opacity-70"
+        >
+          {loading && (
+            <span className="w-[15px] h-[15px] rounded-full border-2 border-white/40 border-t-white inline-block animate-ll-spin" />
+          )}
+          {loading ? "Generating…" : "Generate My Legacy"}
+        </button>
+      </div>
+    );
+  }
+
   const community = buildCommunity();
   const { user, summary, factors, charts } = legacy;
 

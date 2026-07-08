@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import {
   Activity,
   ArrowRight,
@@ -25,7 +26,9 @@ const STEPS = [
   { label: "Step 3", title: "Explore your dashboard", body: "View your split, factor breakdown, charts, and how you compare to the community." },
 ];
 
-export default function LandingPage({ onNavigate }) {
+export default function LandingPage() {
+  const navigate = useNavigate();
+
   return (
     <div>
       {/* HERO */}
@@ -47,14 +50,14 @@ export default function LandingPage({ onNavigate }) {
           </p>
           <div className="flex items-center gap-3.5">
             <button
-              onClick={() => onNavigate("auth", "register")}
+              onClick={() => navigate("/auth?mode=register")}
               className="inline-flex items-center gap-2 text-[15px] font-semibold text-white bg-blue-600 px-[22px] py-3.5 rounded-[10px] shadow-sm hover:bg-blue-700 transition-colors"
             >
               Get Started
               <ArrowRight size={16} color="#FFFFFF" />
             </button>
             <button
-              onClick={() => onNavigate("auth", "login")}
+              onClick={() => navigate("/auth?mode=login")}
               className="text-[15px] font-semibold text-slate-900 px-[18px] py-3.5 rounded-[10px] border border-slate-200 hover:bg-slate-50 transition-colors"
             >
               Sign in
@@ -172,7 +175,7 @@ export default function LandingPage({ onNavigate }) {
             </p>
           </div>
           <button
-            onClick={() => onNavigate("auth", "register")}
+            onClick={() => navigate("/auth?mode=register")}
             className="inline-flex items-center gap-2 text-[15px] font-semibold text-slate-900 bg-white px-6 py-3.5 rounded-[10px] whitespace-nowrap hover:bg-slate-100 transition-colors"
           >
             Get Started
