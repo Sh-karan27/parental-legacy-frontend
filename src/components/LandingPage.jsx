@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import {
   Activity,
   ArrowRight,
@@ -28,6 +29,7 @@ const STEPS = [
 
 export default function LandingPage() {
   const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
 
   return (
     <div>
@@ -49,19 +51,31 @@ export default function LandingPage() {
             life factor analysis based on your date of birth.
           </p>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
-            <button
-              onClick={() => navigate("/auth?mode=register")}
-              className="inline-flex items-center justify-center gap-2 text-[15px] font-semibold text-white bg-blue-600 px-[22px] py-3.5 rounded-[10px] shadow-sm hover:bg-blue-700 transition-colors"
-            >
-              Get Started
-              <ArrowRight size={16} color="#FFFFFF" />
-            </button>
-            <button
-              onClick={() => navigate("/auth?mode=login")}
-              className="text-[15px] font-semibold text-slate-900 px-[18px] py-3.5 rounded-[10px] border border-slate-200 hover:bg-slate-50 transition-colors"
-            >
-              Sign in
-            </button>
+            {user ? (
+              <button
+                onClick={() => navigate("/me")}
+                className="inline-flex items-center justify-center gap-2 text-[15px] font-semibold text-white bg-blue-600 px-[22px] py-3.5 rounded-[10px] shadow-sm hover:bg-blue-700 transition-colors"
+              >
+                Go to My Legacy
+                <ArrowRight size={16} color="#FFFFFF" />
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={() => navigate("/auth?mode=register")}
+                  className="inline-flex items-center justify-center gap-2 text-[15px] font-semibold text-white bg-blue-600 px-[22px] py-3.5 rounded-[10px] shadow-sm hover:bg-blue-700 transition-colors"
+                >
+                  Get Started
+                  <ArrowRight size={16} color="#FFFFFF" />
+                </button>
+                <button
+                  onClick={() => navigate("/auth?mode=login")}
+                  className="text-[15px] font-semibold text-slate-900 px-[18px] py-3.5 rounded-[10px] border border-slate-200 hover:bg-slate-50 transition-colors"
+                >
+                  Sign in
+                </button>
+              </>
+            )}
           </div>
         </div>
 
@@ -175,10 +189,10 @@ export default function LandingPage() {
             </p>
           </div>
           <button
-            onClick={() => navigate("/auth?mode=register")}
+            onClick={() => navigate(user ? "/me" : "/auth?mode=register")}
             className="inline-flex items-center justify-center gap-2 text-[15px] font-semibold text-slate-900 bg-white px-6 py-3.5 rounded-[10px] whitespace-nowrap hover:bg-slate-100 transition-colors"
           >
-            Get Started
+            {user ? "View My Legacy" : "Get Started"}
             <ArrowRight size={16} color="#0F172A" />
           </button>
         </div>

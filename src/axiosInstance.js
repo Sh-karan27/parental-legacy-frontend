@@ -33,19 +33,16 @@ axiosInstance.interceptors.response.use(
       return Promise.reject(error);
     }
 
+    // No localStorage refresh token doesn't necessarily mean no session —
+    // an httpOnly refreshToken cookie from a previous login may still be
+    // valid, and the backend falls back to it when the body is empty.
     const refreshToken = localStorage.getItem("refreshToken");
-    if (!refreshToken) {
-      localStorage.removeItem("accessToken");
-      window.dispatchEvent(new Event("auth:session-expired"));
-      return Promise.reject(error);
-    }
-
     originalRequest._retry = true;
 
     try {
       const response = await axios.post(
         `${API_BASE_URL}/users/refresh-token`,
-        { refreshToken },
+        refreshToken ? { refreshToken } : {},
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,

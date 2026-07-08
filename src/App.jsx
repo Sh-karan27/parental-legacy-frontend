@@ -22,19 +22,23 @@ function App() {
     window.addEventListener("auth:session-expired", handleSessionExpired);
 
     const bootstrap = async () => {
-      const accessToken = localStorage.getItem("accessToken");
-      const refreshToken = localStorage.getItem("refreshToken");
-
       try {
-        if (refreshToken) {
-          await dispatch(refreshAccessToken(refreshToken)).unwrap();
-        }
-
-        if (accessToken || refreshToken) {
-          await dispatch(fetchCurrentUser()).unwrap();
-        }
+        // Try the access token first — it may come from localStorage (Bearer
+        // header) or from an httpOnly cookie set by a previous login, which
+        // localStorage can't see but the browser sends automatically.
+        await dispatch(fetchCurrentUser()).unwrap();
       } catch {
-        // The auth slice clears invalid tokens; the app can continue as logged out.
+        try {
+          // Access token missing/expired — fall back to the refresh token,
+          // which is also readable from the httpOnly cookie server-side even
+          // when localStorage has nothing.
+          const refreshToken = localStorage.getItem("refreshToken");
+          await dispatch(refreshAccessToken(refreshToken)).unwrap();
+          await dispatch(fetchCurrentUser()).unwrap();
+        } catch {
+          // No valid session anywhere — the auth slice already cleared any
+          // stale tokens, so the app continues as logged out.
+        }
       }
 
       setBootstrapping(false);
