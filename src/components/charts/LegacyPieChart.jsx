@@ -6,7 +6,7 @@ export default function LegacyPieChart({ data, height = 300 }) {
   return (
     <ResponsiveContainer width="100%" height={height}>
       <PieChart>
-        <Pie data={data} dataKey="value" nameKey="name" innerRadius={70} outerRadius={100} paddingAngle={2}>
+        <Pie data={data} dataKey="value" nameKey="name" innerRadius="45%" outerRadius="70%" paddingAngle={2}>
           {data.map((entry) => (
             <Cell key={entry.name} fill={COLORS[entry.name] || "#94A3B8"} />
           ))}

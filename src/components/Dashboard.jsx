@@ -41,7 +41,7 @@ export default function Dashboard() {
 
   if (!legacy) {
     return (
-      <div className="max-w-xl mx-auto px-6 py-24 text-center animate-ll-fade-up">
+      <div className="max-w-xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center animate-ll-fade-up">
         <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center mx-auto mb-5">
           <Sparkles size={24} color="#2563EB" />
         </div>
@@ -54,7 +54,7 @@ export default function Dashboard() {
         <button
           onClick={handleGenerate}
           disabled={loading}
-          className="inline-flex items-center gap-2 text-[15px] font-semibold text-white bg-blue-600 px-6 py-3.5 rounded-[10px] shadow-sm hover:bg-blue-700 transition-colors disabled:opacity-70"
+          className="inline-flex items-center justify-center gap-2 text-[15px] font-semibold text-white bg-blue-600 px-6 py-3.5 rounded-[10px] shadow-sm hover:bg-blue-700 transition-colors disabled:opacity-70"
         >
           {loading && (
             <span className="w-[15px] h-[15px] rounded-full border-2 border-white/40 border-t-white inline-block animate-ll-spin" />
@@ -69,8 +69,8 @@ export default function Dashboard() {
 
   return (
     <div className="animate-ll-fade-up">
-      <div className="max-w-[1280px] mx-auto px-10 pt-8 pb-2">
-        <h2 className="text-[26px] font-extrabold tracking-[-0.02em] mb-1 text-slate-900">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 pt-6 sm:pt-8 pb-2">
+        <h2 className="text-2xl sm:text-[26px] font-extrabold mb-1 text-slate-900">
           Welcome back, {user.name}
         </h2>
         <p className="text-[14.5px] text-slate-500 mb-7">
@@ -78,10 +78,10 @@ export default function Dashboard() {
         </p>
       </div>
 
-      <div className="max-w-[1280px] mx-auto px-10 pb-12 grid gap-7 items-start" style={{ gridTemplateColumns: "minmax(0,1fr) 300px" }}>
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 pb-12 grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_300px] gap-6 lg:gap-7 items-start">
         <div className="flex flex-col gap-7 min-w-0">
           {/* SUMMARY CARDS */}
-          <div className="grid gap-[18px]" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[18px]">
             <div className="bg-white border border-slate-200 rounded-2xl p-[22px] transition-all duration-200 hover:-translate-y-[3px] hover:shadow-[0_12px_24px_-12px_rgba(15,23,42,0.14)]">
               <div className="flex items-center justify-between mb-3.5">
                 <div className="w-9 h-9 rounded-[10px] bg-blue-50 flex items-center justify-center">
@@ -136,7 +136,7 @@ export default function Dashboard() {
           </div>
 
           {/* LIFE FACTOR TABLE */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-[26px]">
+          <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-[26px]">
             <h3 className="text-base font-bold mb-0.5 text-slate-900">Life Factor Breakdown</h3>
             <p className="text-[13px] text-slate-500 mb-[18px]">
               Distribution across all seven deterministic life factors.
@@ -166,15 +166,15 @@ export default function Dashboard() {
           </div>
 
           {/* CHARTS */}
-          <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(380px, 1fr))" }}>
-            <div className="bg-white border border-slate-200 rounded-2xl p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 min-w-0">
               <h3 className="text-base font-bold mb-0.5 text-slate-900">Mother vs Father by Factor</h3>
               <p className="text-[13px] text-slate-500 mb-1.5">
                 Side-by-side comparison across every life factor.
               </p>
               <LegacyBarChart data={charts.barChart} height={300} />
             </div>
-            <div className="bg-white border border-slate-200 rounded-2xl p-6">
+            <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 min-w-0">
               <h3 className="text-base font-bold mb-0.5 text-slate-900">Overall Legacy Split</h3>
               <p className="text-[13px] text-slate-500 mb-1.5">
                 Aggregate mother vs father share across all factors.
@@ -186,7 +186,7 @@ export default function Dashboard() {
         </div>
 
         {/* SIDEBAR */}
-        <div className="flex flex-col gap-5 sticky top-[84px]">
+        <div className="flex flex-col gap-5 xl:sticky xl:top-[84px]">
           <div className="bg-white border border-slate-200 rounded-2xl p-6 text-center">
             <div className="w-16 h-16 rounded-full bg-blue-600 text-white text-[22px] font-bold flex items-center justify-center mx-auto mb-3.5">
               {user.name.trim().charAt(0).toUpperCase()}

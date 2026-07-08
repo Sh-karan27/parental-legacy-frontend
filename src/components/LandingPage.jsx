@@ -32,13 +32,13 @@ export default function LandingPage() {
   return (
     <div>
       {/* HERO */}
-      <div className="max-w-[1240px] mx-auto px-10 pt-[88px] pb-14 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-10 pt-10 sm:pt-16 lg:pt-[88px] pb-10 sm:pb-14 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
         <div className="animate-ll-fade-up">
           <div className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-600 text-[12.5px] font-semibold px-3 py-1.5 rounded-full mb-5">
             <Activity size={13} color="#2563EB" />
             Deterministic Life Factor Analysis
           </div>
-          <h1 className="text-[58px] leading-[1.04] font-extrabold tracking-[-0.03em] mb-3.5 text-slate-900">
+          <h1 className="text-4xl sm:text-5xl lg:text-[58px] leading-[1.04] font-extrabold mb-3.5 text-slate-900">
             LegacyLens
           </h1>
           <p className="text-xl font-semibold text-slate-700 mb-4">
@@ -48,10 +48,10 @@ export default function LandingPage() {
             Discover your personalized parental legacy distribution using deterministic
             life factor analysis based on your date of birth.
           </p>
-          <div className="flex items-center gap-3.5">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
             <button
               onClick={() => navigate("/auth?mode=register")}
-              className="inline-flex items-center gap-2 text-[15px] font-semibold text-white bg-blue-600 px-[22px] py-3.5 rounded-[10px] shadow-sm hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center justify-center gap-2 text-[15px] font-semibold text-white bg-blue-600 px-[22px] py-3.5 rounded-[10px] shadow-sm hover:bg-blue-700 transition-colors"
             >
               Get Started
               <ArrowRight size={16} color="#FFFFFF" />
@@ -67,7 +67,7 @@ export default function LandingPage() {
 
         {/* Dashboard preview illustration */}
         <div className="relative animate-ll-fade-up" style={{ animationDelay: "0.1s" }}>
-          <div className="bg-white border border-slate-200 rounded-[20px] shadow-[0_20px_40px_-12px_rgba(15,23,42,0.12)] p-[26px]">
+          <div className="bg-white border border-slate-200 rounded-[20px] shadow-[0_20px_40px_-12px_rgba(15,23,42,0.12)] p-4 sm:p-[26px]">
             <div className="flex items-center justify-between mb-5">
               <div className="text-[13px] font-bold text-slate-900">Legacy Overview</div>
               <div className="flex gap-1.5">
@@ -120,8 +120,8 @@ export default function LandingPage() {
       </div>
 
       {/* LIFE FACTORS */}
-      <div className="max-w-[1240px] mx-auto px-10 pt-6 pb-2">
-        <h2 className="text-[28px] font-extrabold tracking-[-0.02em] mb-2 text-slate-900">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-10 pt-6 pb-2">
+        <h2 className="text-2xl sm:text-[28px] font-extrabold mb-2 text-slate-900">
           Seven life factors, one date of birth
         </h2>
         <p className="text-[15px] text-slate-500 mb-8 max-w-[560px]">
@@ -129,7 +129,7 @@ export default function LandingPage() {
           each scored independently for mother and father.
         </p>
       </div>
-      <div className="max-w-[1240px] mx-auto px-10 pb-16 grid gap-[18px]" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-10 pb-12 sm:pb-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[18px]">
         {LIFE_FACTORS.map((f) => (
           <div
             key={f.title}
@@ -148,12 +148,12 @@ export default function LandingPage() {
       </div>
 
       {/* HOW IT WORKS */}
-      <div className="max-w-[1240px] mx-auto px-10 pt-2 pb-2">
-        <h2 className="text-[28px] font-extrabold tracking-[-0.02em] mb-8 text-slate-900">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-10 pt-2 pb-2">
+        <h2 className="text-2xl sm:text-[28px] font-extrabold mb-8 text-slate-900">
           How it works
         </h2>
       </div>
-      <div className="max-w-[1240px] mx-auto px-10 pb-16 grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))" }}>
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-10 pb-12 sm:pb-16 grid grid-cols-1 sm:grid-cols-3 gap-5">
         {STEPS.map((s) => (
           <div key={s.label} className="px-1">
             <div className="text-[13px] font-bold text-blue-600 mb-2.5">{s.label}</div>
@@ -164,8 +164,8 @@ export default function LandingPage() {
       </div>
 
       {/* FINAL CTA */}
-      <div className="max-w-[1240px] mx-auto mb-16 px-10">
-        <div className="bg-slate-900 rounded-[20px] px-12 py-[52px] flex items-center justify-between gap-8 flex-wrap">
+      <div className="max-w-[1240px] mx-auto mb-12 sm:mb-16 px-4 sm:px-6 lg:px-10">
+        <div className="bg-slate-900 rounded-[20px] px-5 sm:px-8 lg:px-12 py-8 sm:py-[52px] flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-8">
           <div>
             <div className="text-2xl font-extrabold text-white mb-2">
               Ready to see your legacy?
@@ -176,7 +176,7 @@ export default function LandingPage() {
           </div>
           <button
             onClick={() => navigate("/auth?mode=register")}
-            className="inline-flex items-center gap-2 text-[15px] font-semibold text-slate-900 bg-white px-6 py-3.5 rounded-[10px] whitespace-nowrap hover:bg-slate-100 transition-colors"
+            className="inline-flex items-center justify-center gap-2 text-[15px] font-semibold text-slate-900 bg-white px-6 py-3.5 rounded-[10px] whitespace-nowrap hover:bg-slate-100 transition-colors"
           >
             Get Started
             <ArrowRight size={16} color="#0F172A" />

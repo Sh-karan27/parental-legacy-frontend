@@ -100,8 +100,8 @@ export default function AuthCard() {
     }`;
 
   return (
-    <div id="auth-card" className="max-w-[460px] mx-auto my-16 px-6">
-      <div className="bg-white border border-slate-200 rounded-[20px] shadow-[0_8px_24px_-8px_rgba(15,23,42,0.08)] p-9">
+    <div id="auth-card" className="w-full max-w-[460px] mx-auto my-8 sm:my-16 px-4 sm:px-6">
+      <div className="bg-white border border-slate-200 rounded-[20px] shadow-[0_8px_24px_-8px_rgba(15,23,42,0.08)] p-5 sm:p-9">
         <div className="flex bg-slate-100 rounded-xl p-1 mb-[26px]">
           <button type="button" onClick={() => switchMode("login")} className={isRegister ? tabInactive : tabActive}>
             Login

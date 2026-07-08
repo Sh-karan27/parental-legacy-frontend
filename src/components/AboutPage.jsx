@@ -11,12 +11,12 @@ const STACK = ["React", "Tailwind CSS", "Recharts", "Lucide Icons", "Framer Moti
 export default function AboutPage() {
   return (
     <div>
-      <div className="max-w-[760px] mx-auto px-10 pt-[72px] pb-8">
+      <div className="max-w-[760px] mx-auto px-4 sm:px-6 lg:px-10 pt-10 sm:pt-[72px] pb-8">
         <div className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-600 text-[12.5px] font-semibold px-3 py-1.5 rounded-full mb-5">
           <Info size={13} color="#2563EB" />
           About LegacyLens
         </div>
-        <h2 className="text-[38px] font-extrabold tracking-[-0.02em] mb-4 text-slate-900">
+        <h2 className="text-3xl sm:text-[38px] font-extrabold mb-4 text-slate-900">
           A deterministic lens on parental influence
         </h2>
         <p className="text-base leading-[1.7] text-slate-500 mb-3">
@@ -33,7 +33,7 @@ export default function AboutPage() {
         </p>
       </div>
 
-      <div className="max-w-[1240px] mx-auto px-10 pt-6 pb-4 grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-10 pt-6 pb-4 grid grid-cols-1 sm:grid-cols-3 gap-5">
         {STEPS.map((s) => (
           <div key={s.title} className="bg-white border border-slate-200 rounded-2xl p-6">
             <div
@@ -48,8 +48,8 @@ export default function AboutPage() {
         ))}
       </div>
 
-      <div className="max-w-[1240px] mx-auto px-10 pt-6 pb-16">
-        <div className="bg-white border border-slate-200 rounded-2xl p-7">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-10 pt-6 pb-12 sm:pb-16">
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-7">
           <div className="text-[13px] font-bold text-slate-900 mb-3.5">Built with</div>
           <div className="flex flex-wrap gap-2.5">
             {STACK.map((tag) => (
