@@ -56,13 +56,13 @@ function App() {
         <Route element={<PublicLayout />}>
           <Route path="/" element={<LandingPage />} />
           <Route path="/auth" element={<AuthCard />} />
-          <Route path="/dashboard" element={<CommunityPage />} />
-          <Route path="/community" element={<Navigate to="/dashboard" replace />} />
           <Route path="/about" element={<AboutPage />} />
         </Route>
 
         <Route element={<DashboardLayout />}>
           <Route path="/me" element={<Dashboard />} />
+          <Route path="/dashboard" element={<CommunityPage />} />
+          <Route path="/community" element={<Navigate to="/dashboard" replace />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

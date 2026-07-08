@@ -1,6 +1,6 @@
 import { Outlet, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Navbar from "../components/Navbar";
+import DashboardNavbar from "../components/DashboardNavbar";
 import Footer from "../components/Footer";
 
 export default function DashboardLayout() {
@@ -12,7 +12,7 @@ export default function DashboardLayout() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
-      <Navbar />
+      <DashboardNavbar />
       <div className="flex-1">
         <Outlet />
       </div>
