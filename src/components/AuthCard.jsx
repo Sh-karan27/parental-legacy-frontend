@@ -76,7 +76,7 @@ export default function AuthCard() {
     const loginResult = await dispatch(loginUser({ email: form.email, password: form.password }));
     if (loginUser.rejected.match(loginResult)) return;
 
-    navigate("/dashboard");
+    navigate("/me");
   };
 
   const switchMode = (mode) => {

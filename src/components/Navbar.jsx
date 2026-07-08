@@ -1,13 +1,22 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Sparkles } from "lucide-react";
+import { logoutUser } from "../store/slices/userSlice";
+import { clearLegacy } from "../store/slices/legacySlice";
 
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
 
   const isActive = (path) => location.pathname === path;
+
+  const handleLogout = async () => {
+    await dispatch(logoutUser());
+    dispatch(clearLegacy());
+    navigate("/");
+  };
 
   return (
     <div className="sticky top-0 z-20 bg-white border-b border-slate-200">
@@ -26,8 +35,8 @@ export default function Navbar() {
           >
             Home
           </Link>
-          <span
-            onClick={() => navigate(user ? "/dashboard" : "/community")}
+          <Link
+            to="/dashboard"
             className={`text-sm cursor-pointer ${
               isActive("/dashboard") || isActive("/community")
                 ? "font-medium text-slate-900"
@@ -35,7 +44,7 @@ export default function Navbar() {
             }`}
           >
             Dashboard
-          </span>
+          </Link>
           <Link
             to="/about"
             className={`text-sm ${isActive("/about") ? "font-medium text-slate-900" : "font-medium text-slate-500"}`}
@@ -44,20 +53,38 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <div className="flex items-center gap-2.5">
-          <Link
-            to="/auth?mode=login"
-            className="text-sm font-semibold text-slate-900 px-4 py-2.5 rounded-lg hover:bg-slate-100 transition-colors"
-          >
-            Login
-          </Link>
-          <Link
-            to="/auth?mode=register"
-            className="text-sm font-semibold text-white bg-blue-600 px-[18px] py-2.5 rounded-lg shadow-sm hover:bg-blue-700 transition-colors"
-          >
-            Register
-          </Link>
-        </div>
+        {user ? (
+          <div className="flex items-center gap-2.5">
+            <Link
+              to="/me"
+              className="text-sm font-semibold text-slate-900 px-4 py-2.5 rounded-lg hover:bg-slate-100 transition-colors"
+            >
+              My Legacy
+            </Link>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="text-sm font-semibold text-white bg-blue-600 px-[18px] py-2.5 rounded-lg shadow-sm hover:bg-blue-700 transition-colors"
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2.5">
+            <Link
+              to="/auth?mode=login"
+              className="text-sm font-semibold text-slate-900 px-4 py-2.5 rounded-lg hover:bg-slate-100 transition-colors"
+            >
+              Login
+            </Link>
+            <Link
+              to="/auth?mode=register"
+              className="text-sm font-semibold text-white bg-blue-600 px-[18px] py-2.5 rounded-lg shadow-sm hover:bg-blue-700 transition-colors"
+            >
+              Register
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -8,8 +8,15 @@ export const FACTORS = [
   "Health & Vitality",
 ];
 
+export function normalizeDate(dobStr) {
+  if (!dobStr) return "";
+  const dateOnly = String(dobStr).split("T")[0];
+  const match = dateOnly.match(/^\d{4}-\d{2}-\d{2}$/);
+  return match ? dateOnly : String(dobStr);
+}
+
 export function computeLegacy(dobStr) {
-  const parts = (dobStr || "1994-05-12").split("-").map(Number);
+  const parts = normalizeDate(dobStr || "1994-05-12").split("-").map(Number);
   const year = parts[0] || 1994;
   const month = parts[1] || 5;
   const day = parts[2] || 12;
@@ -38,10 +45,7 @@ export function computeLegacy(dobStr) {
 }
 
 export function formatDate(dobStr) {
-  if (!dobStr) return "";
-  const d = new Date(dobStr + "T00:00:00");
-  if (isNaN(d.getTime())) return dobStr;
-  return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  return normalizeDate(dobStr);
 }
 
 export const COMMUNITY_SEED = [

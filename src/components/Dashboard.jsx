@@ -4,7 +4,7 @@ import { Percent, Award, CheckCircle, TrendingUp, Calendar, Sparkles } from "luc
 import LegacyBarChart from "./charts/LegacyBarChart";
 import LegacyPieChart from "./charts/LegacyPieChart";
 import { fetchMyLegacy } from "../store/slices/legacySlice";
-import { formatDate, buildCommunity } from "../utils/computeLegacy";
+import { formatDate } from "../utils/computeLegacy";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
@@ -65,7 +65,6 @@ export default function Dashboard() {
     );
   }
 
-  const community = buildCommunity();
   const { user, summary, factors, charts } = legacy;
 
   return (
@@ -184,14 +183,6 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* COMMUNITY */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-[26px]">
-            <h3 className="text-base font-bold mb-0.5 text-slate-900">Community Insights</h3>
-            <p className="text-[13px] text-slate-500 mb-[18px]">
-              See how other LegacyLens members compare. Display only.
-            </p>
-            <CommunityTable community={community} />
-          </div>
         </div>
 
         {/* SIDEBAR */}
@@ -226,53 +217,6 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-function CommunityTable({ community }) {
-  return (
-    <div className="overflow-x-auto">
-      <table className="w-full border-collapse" style={{ minWidth: 640 }}>
-        <thead>
-          <tr>
-            <th className="text-left text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200"></th>
-            <th className="text-left text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Name</th>
-            <th className="text-left text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">DOB</th>
-            <th className="text-right text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Mother %</th>
-            <th className="text-right text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Father %</th>
-            <th className="text-left text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Higher</th>
-            <th className="text-left text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {community.map((u, i) => (
-            <tr key={u.id} style={{ background: i % 2 === 0 ? "#FFFFFF" : "#F8FAFC" }}>
-              <td className="px-3 py-2.5">
-                <div
-                  className="w-[30px] h-[30px] rounded-full text-white text-xs font-bold flex items-center justify-center"
-                  style={{ background: u.avatarBg }}
-                >
-                  {u.initial}
-                </div>
-              </td>
-              <td className="text-left text-[13.5px] font-medium text-slate-900 px-3 py-2.5 whitespace-nowrap">{u.name}</td>
-              <td className="text-left text-[13px] text-slate-500 px-3 py-2.5 whitespace-nowrap">{u.dobLabel}</td>
-              <td className="text-right text-[13.5px] font-semibold text-blue-600 px-3 py-2.5">{u.mother}%</td>
-              <td className="text-right text-[13.5px] font-semibold text-emerald-500 px-3 py-2.5">{u.father}%</td>
-              <td className="text-left text-[13px] text-slate-700 px-3 py-2.5">{u.higher}</td>
-              <td className="px-3 py-2.5">
-                <span
-                  className="text-[11.5px] font-semibold px-2.5 py-1 rounded-full"
-                  style={{ background: u.statusBg, color: u.statusColor }}
-                >
-                  {u.status}
-                </span>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </div>
   );
 }
