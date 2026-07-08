@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+body {
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+@keyframes ll-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ll-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-ll-spin {
+  animation: ll-spin 0.7s linear infinite;
+}
+
+.animate-ll-fade-up {
+  animation: ll-fade-up 0.6s ease both;
+}
