@@ -92,11 +92,11 @@ export default function LandingPage() {
             </div>
             <div className="grid grid-cols-3 gap-2.5 mb-5">
               <div className="bg-slate-50 rounded-xl p-3.5">
-                <div className="text-xl font-extrabold text-blue-600">62%</div>
+                <div className="text-xl font-extrabold text-blue-600">62</div>
                 <div className="text-[11px] text-slate-500 mt-0.5">Mother</div>
               </div>
               <div className="bg-slate-50 rounded-xl p-3.5">
-                <div className="text-xl font-extrabold text-emerald-500">38%</div>
+                <div className="text-xl font-extrabold text-emerald-500">38</div>
                 <div className="text-[11px] text-slate-500 mt-0.5">Father</div>
               </div>
               <div className="bg-slate-50 rounded-xl p-3.5">
@@ -121,11 +121,11 @@ export default function LandingPage() {
               <div className="flex-1">
                 <div className="flex items-center gap-1.5 text-xs text-slate-700 mb-1.5">
                   <span className="w-2 h-2 rounded-full bg-blue-600 inline-block" />
-                  Mother Legacy — 62%
+                  Mother Legacy — 62
                 </div>
                 <div className="flex items-center gap-1.5 text-xs text-slate-700">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
-                  Father Legacy — 38%
+                  Father Legacy — 38
                 </div>
               </div>
             </div>

@@ -77,8 +77,8 @@ export default function CommunityPage() {
                   <th className="text-left text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200"></th>
                   <th className="text-left text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Name</th>
                   <th className="text-left text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">DOB</th>
-                  <th className="text-right text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Mother %</th>
-                  <th className="text-right text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Father %</th>
+                  <th className="text-right text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Mother</th>
+                  <th className="text-right text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Father</th>
                   <th className="text-left text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Higher</th>
                   <th className="text-left text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Status</th>
                 </tr>
@@ -106,10 +106,10 @@ export default function CommunityPage() {
                       {formatDob(u.dob)}
                     </td>
                     <td className="text-right text-[13.5px] font-semibold text-blue-600 px-3 py-2.5">
-                      {u.motherTotal != null ? `${u.motherTotal}%` : "—"}
+                      {u.motherTotal != null ? u.motherTotal : "—"}
                     </td>
                     <td className="text-right text-[13.5px] font-semibold text-emerald-500 px-3 py-2.5">
-                      {u.fatherTotal != null ? `${u.fatherTotal}%` : "—"}
+                      {u.fatherTotal != null ? u.fatherTotal : "—"}
                     </td>
                     <td className="text-left text-[13px] text-slate-700 px-3 py-2.5">
                       {u.higherLegacy || "—"}
@@ -152,8 +152,8 @@ function UserLegacyDetail({ legacy }) {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-[18px] mb-7">
-        <SummaryCard label="Mother Legacy" value={`${summary.motherTotal}%`} color="text-blue-600" />
-        <SummaryCard label="Father Legacy" value={`${summary.fatherTotal}%`} color="text-emerald-500" />
+        <SummaryCard label="Mother Legacy" value={summary.motherTotal} color="text-blue-600" />
+        <SummaryCard label="Father Legacy" value={summary.fatherTotal} color="text-emerald-500" />
         <SummaryCard label="Higher Legacy" value={summary.higherLegacy} color="text-slate-900" />
       </div>
 
@@ -173,9 +173,9 @@ function UserLegacyDetail({ legacy }) {
               {factors.map((f, i) => (
                 <tr key={f.name} style={{ background: i % 2 === 0 ? "#FFFFFF" : "#F8FAFC" }}>
                   <td className="text-left text-[13.5px] font-medium text-slate-900 px-3 py-3">{f.name}</td>
-                  <td className="text-right text-[13.5px] font-semibold text-blue-600 px-3 py-3">{f.mother}%</td>
-                  <td className="text-right text-[13.5px] font-semibold text-emerald-500 px-3 py-3">{f.father}%</td>
-                  <td className="text-right text-[13.5px] font-semibold text-slate-500 px-3 py-3">{f.total}%</td>
+                  <td className="text-right text-[13.5px] font-semibold text-blue-600 px-3 py-3">{f.mother}</td>
+                  <td className="text-right text-[13.5px] font-semibold text-emerald-500 px-3 py-3">{f.father}</td>
+                  <td className="text-right text-[13.5px] font-semibold text-slate-500 px-3 py-3">{f.total}</td>
                 </tr>
               ))}
             </tbody>

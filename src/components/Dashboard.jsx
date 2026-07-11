@@ -88,7 +88,7 @@ export default function Dashboard() {
                   <Percent size={17} color="#2563EB" />
                 </div>
               </div>
-              <div className="text-[30px] font-extrabold text-slate-900">{animMother}%</div>
+              <div className="text-[30px] font-extrabold text-slate-900">{animMother}</div>
               <div className="text-[13px] text-slate-500 mt-0.5">Mother Legacy</div>
               <div className="h-[5px] bg-slate-100 rounded-full mt-3 overflow-hidden">
                 <div
@@ -104,7 +104,7 @@ export default function Dashboard() {
                   <Award size={17} color="#10B981" />
                 </div>
               </div>
-              <div className="text-[30px] font-extrabold text-slate-900">{animFather}%</div>
+              <div className="text-[30px] font-extrabold text-slate-900">{animFather}</div>
               <div className="text-[13px] text-slate-500 mt-0.5">Father Legacy</div>
               <div className="h-[5px] bg-slate-100 rounded-full mt-3 overflow-hidden">
                 <div
@@ -155,9 +155,9 @@ export default function Dashboard() {
                   {factors.map((f, i) => (
                     <tr key={f.name} style={{ background: i % 2 === 0 ? "#FFFFFF" : "#F8FAFC" }}>
                       <td className="text-left text-[13.5px] font-medium text-slate-900 px-3 py-3">{f.name}</td>
-                      <td className="text-right text-[13.5px] font-semibold text-blue-600 px-3 py-3">{f.mother}%</td>
-                      <td className="text-right text-[13.5px] font-semibold text-emerald-500 px-3 py-3">{f.father}%</td>
-                      <td className="text-right text-[13.5px] font-semibold text-slate-500 px-3 py-3">{f.total}%</td>
+                      <td className="text-right text-[13.5px] font-semibold text-blue-600 px-3 py-3">{f.mother}</td>
+                      <td className="text-right text-[13.5px] font-semibold text-emerald-500 px-3 py-3">{f.father}</td>
+                      <td className="text-right text-[13.5px] font-semibold text-slate-500 px-3 py-3">{f.total}</td>
                     </tr>
                   ))}
                 </tbody>
