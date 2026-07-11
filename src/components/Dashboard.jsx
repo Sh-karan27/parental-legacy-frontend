@@ -1,17 +1,51 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Percent, Award, CheckCircle, TrendingUp, Calendar, Sparkles } from "lucide-react";
+import { Percent, Award, CheckCircle, TrendingUp, Calendar, Sparkles, Pencil } from "lucide-react";
 import LegacyBarChart from "./charts/LegacyBarChart";
 import LegacyPieChart from "./charts/LegacyPieChart";
 import { fetchMyLegacy } from "../store/slices/legacySlice";
-import { formatDate } from "../utils/computeLegacy";
+import { updateUserDob } from "../store/slices/userSlice";
+import { formatDate, normalizeDate } from "../utils/computeLegacy";
+import { getFactorRange } from "../utils/factorRanges";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
   const authUser = useSelector((state) => state.auth.user);
+  const dobSaving = useSelector((state) => state.auth.loading);
   const { data: legacy, loading } = useSelector((state) => state.legacy);
   const [animMother, setAnimMother] = useState(0);
   const [animFather, setAnimFather] = useState(0);
+  const [editingDob, setEditingDob] = useState(false);
+  const [dobInput, setDobInput] = useState(normalizeDate(authUser?.dob));
+
+  useEffect(() => {
+    setDobInput(normalizeDate(authUser?.dob));
+  }, [authUser?.dob]);
+
+  useEffect(() => {
+    if (authUser && !legacy && !loading) {
+      dispatch(fetchMyLegacy());
+    }
+  }, [authUser, legacy, loading, dispatch]);
+
+  const todayStr = new Date().toISOString().split("T")[0];
+
+  const handleSaveDob = async () => {
+    if (!dobInput || dobInput === normalizeDate(authUser?.dob)) {
+      setEditingDob(false);
+      return;
+    }
+    const result = await dispatch(updateUserDob(dobInput));
+    if (updateUserDob.fulfilled.match(result)) {
+      setEditingDob(false);
+      dispatch(fetchMyLegacy());
+    }
+  };
+
+  const handleCancelDob = () => {
+    setDobInput(normalizeDate(authUser?.dob));
+    setEditingDob(false);
+  };
 
   useEffect(() => {
     if (!legacy) return;
@@ -73,9 +107,48 @@ export default function Dashboard() {
         <h2 className="text-2xl sm:text-[26px] font-extrabold mb-1 text-slate-900">
           Welcome back, {user.name}
         </h2>
-        <p className="text-[14.5px] text-slate-500 mb-7">
-          Here's your parental legacy distribution based on {formatDate(user.dob)}.
-        </p>
+        <div className="flex flex-wrap items-center gap-2 text-[14.5px] text-slate-500 mb-7">
+          {editingDob ? (
+            <>
+              <span>Here's your parental legacy distribution based on</span>
+              <input
+                type="date"
+                value={dobInput}
+                max={todayStr}
+                onChange={(e) => setDobInput(e.target.value)}
+                disabled={dobSaving}
+                className="text-[13px] text-slate-900 px-2 py-1 rounded-[8px] border border-slate-200 focus:outline-none focus:border-blue-600 focus:ring-[3px] focus:ring-blue-600/10"
+              />
+              <button
+                type="button"
+                onClick={handleSaveDob}
+                disabled={dobSaving}
+                className="text-[12px] font-semibold text-white bg-blue-600 px-2.5 py-1 rounded-[8px] hover:bg-blue-700 transition-colors disabled:opacity-70"
+              >
+                {dobSaving ? "Saving…" : "Save"}
+              </button>
+              <button
+                type="button"
+                onClick={handleCancelDob}
+                disabled={dobSaving}
+                className="text-[12px] font-semibold text-slate-500 px-2 py-1 rounded-[8px] hover:bg-slate-100 transition-colors"
+              >
+                Cancel
+              </button>
+            </>
+          ) : (
+            <>
+              <span>Here's your parental legacy distribution based on {formatDate(user.dob)}.</span>
+              <button
+                type="button"
+                onClick={() => setEditingDob(true)}
+                className="inline-flex items-center gap-1 text-[13px] font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+              >
+                <Pencil size={12} /> Change
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 pb-12 grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_300px] gap-6 lg:gap-7 items-start">
@@ -146,21 +219,44 @@ export default function Dashboard() {
                 <thead>
                   <tr>
                     <th className="text-left text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Life Factor</th>
+                    <th className="text-right text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Range</th>
                     <th className="text-right text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Mother</th>
                     <th className="text-right text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Father</th>
                     <th className="text-right text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Total</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {factors.map((f, i) => (
-                    <tr key={f.name} style={{ background: i % 2 === 0 ? "#FFFFFF" : "#F8FAFC" }}>
-                      <td className="text-left text-[13.5px] font-medium text-slate-900 px-3 py-3">{f.name}</td>
-                      <td className="text-right text-[13.5px] font-semibold text-blue-600 px-3 py-3">{f.mother}</td>
-                      <td className="text-right text-[13.5px] font-semibold text-emerald-500 px-3 py-3">{f.father}</td>
-                      <td className="text-right text-[13.5px] font-semibold text-slate-500 px-3 py-3">{f.total}</td>
-                    </tr>
-                  ))}
+                  {factors.map((f, i) => {
+                    const range = getFactorRange(f.name);
+                    return (
+                      <tr key={f.name} style={{ background: i % 2 === 0 ? "#FFFFFF" : "#F8FAFC" }}>
+                        <td className="text-left text-[13.5px] font-medium text-slate-900 px-3 py-3">{f.name}</td>
+                        <td className="text-right text-[13px] text-slate-500 px-3 py-3 whitespace-nowrap">
+                          {range ? `${range.min} – ${range.max}` : "—"}
+                        </td>
+                        <td className="text-right text-[13.5px] font-semibold text-blue-600 px-3 py-3">{f.mother}</td>
+                        <td className="text-right text-[13.5px] font-semibold text-emerald-500 px-3 py-3">{f.father}</td>
+                        <td className="text-right text-[13.5px] font-semibold text-slate-500 px-3 py-3">{f.total}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
+                <tfoot>
+                  <tr>
+                    <td className="text-left text-[13.5px] font-bold text-slate-900 px-3 py-3 border-t border-slate-200" colSpan={2}>
+                      Grand Total
+                    </td>
+                    <td className="text-right text-[13.5px] font-bold text-blue-600 px-3 py-3 border-t border-slate-200">
+                      {factors.reduce((sum, f) => sum + f.mother, 0).toFixed(2)}
+                    </td>
+                    <td className="text-right text-[13.5px] font-bold text-emerald-500 px-3 py-3 border-t border-slate-200">
+                      {factors.reduce((sum, f) => sum + f.father, 0).toFixed(2)}
+                    </td>
+                    <td className="text-right text-[13.5px] font-bold text-slate-900 px-3 py-3 border-t border-slate-200">
+                      {factors.reduce((sum, f) => sum + f.total, 0).toFixed(2)}
+                    </td>
+                  </tr>
+                </tfoot>
               </table>
             </div>
           </div>
@@ -203,10 +299,6 @@ export default function Dashboard() {
             <div className="flex justify-between items-center py-2.5 border-b border-slate-100">
               <span className="text-[13px] text-slate-500">Factors analyzed</span>
               <span className="text-[13px] font-semibold text-slate-900">{factors.length}</span>
-            </div>
-            <div className="flex justify-between items-center py-2.5 border-b border-slate-100">
-              <span className="text-[13px] text-slate-500">Birth weight</span>
-              <span className="text-[13px] font-semibold text-slate-900">{summary.birthWeight}</span>
             </div>
             <div className="flex justify-between items-center py-2.5">
               <span className="text-[13px] text-slate-500">Account status</span>

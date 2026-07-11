@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { fetchLegacyUsers, fetchLegacyByUserId, clearSelectedUserLegacy } from "../store/slices/legacySlice";
 import LegacyBarChart from "./charts/LegacyBarChart";
 import LegacyPieChart from "./charts/LegacyPieChart";
+import { getFactorRange } from "../utils/factorRanges";
 
 const AVATAR_COLORS = ["#2563EB", "#10B981", "#F59E0B", "#64748B", "#0F172A"];
 
@@ -164,21 +165,44 @@ function UserLegacyDetail({ legacy }) {
             <thead>
               <tr>
                 <th className="text-left text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Life Factor</th>
+                <th className="text-right text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Range</th>
                 <th className="text-right text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Mother</th>
                 <th className="text-right text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Father</th>
                 <th className="text-right text-xs font-semibold text-slate-500 px-3 py-2.5 border-b border-slate-200">Total</th>
               </tr>
             </thead>
             <tbody>
-              {factors.map((f, i) => (
-                <tr key={f.name} style={{ background: i % 2 === 0 ? "#FFFFFF" : "#F8FAFC" }}>
-                  <td className="text-left text-[13.5px] font-medium text-slate-900 px-3 py-3">{f.name}</td>
-                  <td className="text-right text-[13.5px] font-semibold text-blue-600 px-3 py-3">{f.mother}</td>
-                  <td className="text-right text-[13.5px] font-semibold text-emerald-500 px-3 py-3">{f.father}</td>
-                  <td className="text-right text-[13.5px] font-semibold text-slate-500 px-3 py-3">{f.total}</td>
-                </tr>
-              ))}
+              {factors.map((f, i) => {
+                const range = getFactorRange(f.name);
+                return (
+                  <tr key={f.name} style={{ background: i % 2 === 0 ? "#FFFFFF" : "#F8FAFC" }}>
+                    <td className="text-left text-[13.5px] font-medium text-slate-900 px-3 py-3">{f.name}</td>
+                    <td className="text-right text-[13px] text-slate-500 px-3 py-3 whitespace-nowrap">
+                      {range ? `${range.min} – ${range.max}` : "—"}
+                    </td>
+                    <td className="text-right text-[13.5px] font-semibold text-blue-600 px-3 py-3">{f.mother}</td>
+                    <td className="text-right text-[13.5px] font-semibold text-emerald-500 px-3 py-3">{f.father}</td>
+                    <td className="text-right text-[13.5px] font-semibold text-slate-500 px-3 py-3">{f.total}</td>
+                  </tr>
+                );
+              })}
             </tbody>
+            <tfoot>
+              <tr>
+                <td className="text-left text-[13.5px] font-bold text-slate-900 px-3 py-3 border-t border-slate-200" colSpan={2}>
+                  Grand Total
+                </td>
+                <td className="text-right text-[13.5px] font-bold text-blue-600 px-3 py-3 border-t border-slate-200">
+                  {factors.reduce((sum, f) => sum + f.mother, 0).toFixed(2)}
+                </td>
+                <td className="text-right text-[13.5px] font-bold text-emerald-500 px-3 py-3 border-t border-slate-200">
+                  {factors.reduce((sum, f) => sum + f.father, 0).toFixed(2)}
+                </td>
+                <td className="text-right text-[13.5px] font-bold text-slate-900 px-3 py-3 border-t border-slate-200">
+                  {factors.reduce((sum, f) => sum + f.total, 0).toFixed(2)}
+                </td>
+              </tr>
+            </tfoot>
           </table>
         </div>
       </div>

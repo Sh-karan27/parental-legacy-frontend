@@ -78,6 +78,18 @@ export const fetchCurrentUser = createAsyncThunk(
   }
 );
 
+export const updateUserDob = createAsyncThunk(
+  "auth/updateUserDob",
+  async (dob, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.patch("/users/me", { dob });
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
 export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
   try {
     await axiosInstance.post("/users/logout");
@@ -148,6 +160,21 @@ const userSlice = createSlice({
 
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
+      })
+
+      .addCase(updateUserDob.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateUserDob.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        toast.success("Date of birth updated");
+      })
+      .addCase(updateUserDob.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message;
+        toast.error(action.payload?.message || "Failed to update date of birth");
       });
   },
 });
